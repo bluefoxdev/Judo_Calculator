@@ -184,7 +184,9 @@ def calculate_cost(Athletes):
         except KeyError:
             #print error message if unrecognised plan
             print(instance.get_plan())
+        #increase total
         Price += Plan_price
+        #add cost to list
         Prices.append(Plan_price)
     return [Price, Prices]
 
