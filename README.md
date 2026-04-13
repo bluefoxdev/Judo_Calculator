@@ -18,3 +18,7 @@ When the project began the program was given the following requirements to follo
 * demonstrate inheritance 
 * feature at least one pure function
 
+
+### Usage
+
+free to use and learn from for anything without credit.
