@@ -195,70 +195,67 @@ def main():
     loop = True
     #main program loop
     while(loop == True):
+        #display main menu and options
         print("##########JUDO APP##########\n")
         print("Please type a number for service")
         print("1: Register Athlete")
         print("2: View Athletes")
         print("3: Delete Athlete")
-        print("4: Save reciept") #out of scope, remove for submission
-        print("5: Exit")
+        print("4: Exit")
+        
+        #user input and formatting
         choice = input("Enter service number:")
         choice = choice.strip()
 
+        #checks if choice is a number
         if choice[0].isnumeric():
             
+            #match case with options 
             match choice[0]:
+                #create a new athlete
                 case "1":
+                    #takes user to create an athlete then assigns to Athletes array when finished
                     Athletes.append(Athlete(None, None, None, None, None, True))
+                #list all athletes
                 case "2":
+                    #gets the cost for all athletes individually and all together 
                     prices = calculate_cost(Athletes)
                     for instance in Athletes:
                         print(f"\nAthlete {Athletes.index(instance)+1}:")
                         instance.print_info()
                         print(f"-Charge: £{prices[1][Athletes.index(instance)]}")
                     print(f"\nTotal: £{prices[0]}")
-
+                
+                #delete athlete
                 case "3":
+                    #lists 
                     for instance in Athletes:
                         print(f"\nAthlete {Athletes.index(instance)+1}:")
                         instance.print_info()
+                    #prompts user for choice and removes whitespace from sides
                     delete_Attempt = input("Enter the number of the Athlete you want to delete:")
                     delete_Attempt = delete_Attempt.strip()
 
+                    #try and convert user input to int for reading
                     try:
+                        #int conversion
                         delete_Attempt = int(delete_Attempt[0])
+                        #check if input is above zero and less or equal to number of athletes
                         if delete_Attempt > 0 and delete_Attempt <= len(Athletes):
+                           #deletes athletes
                             del Athletes[delete_Attempt-1]
                             print("Athlete deleted successfully")
+                        #warn if number is invalid
                         else:
-                            print("Invalid choice, number out of range")
+                            print("Invalid choice, number out of range (must be in range of number of athletes)")
+                    #if it cannot be turned into an int warn user
                     except TypeError:
                         print('Answer not Numeric (eg: "3")')
-                case "4": #out of scope, remove for submission
-                    storage_directory = f"{os.path.realpath(os.path.dirName(__file__))}"
-                    valid_fileName_found = False
-                    receipt_number = 1
-
-                    while(valid_fileName_found == False):
-                        if os.path.exists(f"{storage_directory}\Receipt {receipt_number}.txt"):
-                            receipt_number += 1
-                        else:
-                            valid_fileName_found = True
-                            file = open(f"{storage_directory}\Receipt {receipt_number}.txt", "w")
-                            file.write("#####Receipt#####\n")
-                            for participants in Athletes:
-                                file.write(f"-Athlete {participants.Name}")
-                                file.write(f"\n  Age {participants.Age}")
-                                file.write(f"\n  Weight {participants.Weight}")
-                                file.write(f"\n  Sex {participants.Sex}")
-                                file.write(f"\n  Weight category {participants.Weight_category}")
-                            file.write("\n\n###save this for later to reload###")
-                            file.close()
-                            print(f"Data saved as Receipt{receipt_number} in\n{storage_directory}\n do not edit the contents to ensure proper loading later on.")
-                
-                case "5":
+                #quit the program
+                case "4":
                     print("Have a good day!")
                     loop = False
+                #warn user choice is invalid
                 case _:
                     print(f"Invalid choice {choice[0]}")
         #warn user if answer is not numeric
