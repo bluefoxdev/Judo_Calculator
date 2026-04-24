@@ -78,7 +78,7 @@ class Athlete(Person):
                         print('Age must be a positive number and more than 0, please retry.')
                 #input contains more than just numbers prompt user to retry
                 except ValueError:
-                    print('Age must be given as number of years alone (no "year" or "yr"), please retry.')
+                    print('Age must be given as number of years alone (no "year" or "yr" and no decimals), please retry.')
 
             #loops till valid Weight is given by user
             while(self.Weight == 0):
