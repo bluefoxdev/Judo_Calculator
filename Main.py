@@ -6,19 +6,25 @@ import os
 ###Global variable###
 #Athlete storage#
 Athletes = []
+###
+
+###Service prices###
+
+###pricing for services###
+competition_price = 15
+
+private_coaching_price = 20
+#prices are per hour in pound sterling
 
 ###plan prices###
-Beginner = 25
-Intermediate = 45
-Advanced = 80
-Professional = 120
 
 plans = {
     "Beginner": 25,
     "Intermediate": 45,
-    "Advanced": 80,
+    "Advance": 80,
     "Professional": 120,
 }
+#all prices are treated as pound sterling
 ########
 
 
@@ -43,7 +49,7 @@ class Person():
         
 class Athlete(Person):
     #initialisation
-    def __init__(self, Name, Age, Weight, Sex, gym_plan, manual_input):
+    def __init__(self, Name, Age, Weight, Sex, gym_plan, competitions, coaching_hours, manual_input):
         #determines if the program or the user is filling initalisation info
         if manual_input == False:
             #program fills out
@@ -52,6 +58,10 @@ class Athlete(Person):
             self.Weight = Weight
             self.Sex = Sex
             self.gym_plan = gym_plan
+            self.competitions = competitions
+            self.coaching_hours = coaching_hours
+            #this part is unnecassary due to the removal of reciepts 
+            #however it will be useful for an immutible editing system 
         else:
             #user fills out
             print("#####Adding new Athlete#####\n")
@@ -59,8 +69,10 @@ class Athlete(Person):
             self.Age = 0
             self.Weight = 0
             self.Sex = ""
-            self.Weight_category = ""#
+            self.Weight_category = ""
             self.gym_plan = ""
+            self.competitions = ""
+            self.coaching_hours = ""
             #loops until a valid age other than zero entered by user
             while(self.Age == 0):
                 #ageinput
@@ -104,20 +116,41 @@ class Athlete(Person):
                 #user input and input formatting
                 Attempt = input('Enter Sex(eg "M" or "F"):')
                 Attempt = Attempt.strip().upper()
-                #checks if the input is M or F, if not warn user and allow it to be entered
+                #checks if the input is M or F, if not warn user and allow it to be reentered
                 if Attempt in ["M", "F"]:
                     self.Sex = Attempt
                 else:
                     print("Invalid Sex entered, for the Safety of other athletes either M or F needs to be specified for proper weight classification, please enter M or F")
 
+            #loops till valid gym plan is given by user
             while(self.gym_plan == ""):
-                Attempt = input('Enter desired plan number\n1:Beginner\n2:Intermediate\n3:Advanced\n4:Professional\n')
+                #user input and input formatting
+                Attempt = input('Enter desired plan number\n1:Beginner\n2:Intermediate\n3:Advance\n4:Professional\n')
                 Attempt = Attempt.strip()
-
-                if Attempt[0] in ["1", "2", "3", "4"]:
+                #checks if the input is a valid number, if not warn user and allow it to be reentered
+                if Attempt in ["1", "2", "3", "4"]:
                     self.gym_plan = Attempt
                 else:
                     print("Invalid, please enter a number of the desired plan on the list.")
+            #loops till valid amount of competitions are given by user
+            while(self.competitions == ""):
+                Attempt = input('Enter desired amount of competitions from 0 to 2:')
+                Attempt = Attempt.strip()
+                #checks if the input is a valid number, if not warn user and allow it to be reentered
+                if Attempt in ["0", "1", "2"]:
+                    self.competitions = Attempt
+                else:
+                    print("Invalid number of competitions.")
+
+            #loops till valid amount of private tutoring hours is given by user
+            while(self.coaching_hours == ""):
+                Attempt = input('Enter desired amount of private coaching hours from 0 to 3\n')
+                Attempt = Attempt.strip()
+                #checks if the input is a valid number, if not warn user and allow it to be reentered
+                if Attempt in ["0", "1", "2", "3"]:
+                    self.coaching_hours = Attempt
+                else:
+                    print("Invalid number of hours selected .")
 
         #assigns Weight catagory based on weight and sex
         #Males
@@ -146,6 +179,7 @@ class Athlete(Person):
         print("Athlete created successfully")
 
     def introduction(self):
+        #little introduction function not needed or used
         return f"Hello, my Name is {self.Name}, I am {self.Age} year old {self.get_Sex()} Athlete, and I Weight {self.Weight} kgs,\nthis puts me in the {self.Weight_category} category."
     
     def get_plan(self):
@@ -169,6 +203,8 @@ class Athlete(Person):
         print(f"Sex: {self.get_Sex()}")
         print(f"Weight category: {self.Weight_category}")
         print(f"Gym plan: {self.get_plan()}")
+        print(f"Competitions entered: {self.competitions}")
+        print(f"Private coaching hours: {self.coaching_hours}")
         
 
 #returns the list of costs and total costs
@@ -179,15 +215,21 @@ def calculate_cost(Athletes):
     Prices = []
     #loop through athletes and assign cost based on chosen plan
     for instance in Athletes:
-        try:
+        Plan_price = 0
+        
+        #error catching tests to see if the gym plan number is recognised
+        if instance.gym_plan in ["1", "2", "3", "4"]:
             Plan_price = plans[instance.get_plan()]
-        except KeyError:
-            #print error message if unrecognised plan
+        else:
+            #There's no reason way a user can make an inccorect input but if they do somehow, its caught here
             print(instance.get_plan())
-        #increase total
-        Price += Plan_price
+
+        Plan_a_services = Plan_price+(competition_price*int(instance.competitions))+(private_coaching_price*int(instance.coaching_hours))
+        #increase total cost
+        Price += Plan_a_services
         #add cost to list
-        Prices.append(Plan_price)
+        Prices.append(Plan_a_services)
+
     return [Price, Prices]
 
 
@@ -215,7 +257,7 @@ def main():
                 #create a new athlete
                 case "1":
                     #takes user to create an athlete then assigns to Athletes array when finished
-                    Athletes.append(Athlete(None, None, None, None, None, True))
+                    Athletes.append(Athlete(None, None, None, None, None, None, None, True))
                 #list all athletes
                 case "2":
                     #gets the cost for all athletes individually and all together 
@@ -223,12 +265,13 @@ def main():
                     for instance in Athletes:
                         print(f"\nAthlete {Athletes.index(instance)+1}:")
                         instance.print_info()
-                        print(f"-Charge: £{prices[1][Athletes.index(instance)]}")
-                    print(f"\nTotal: £{prices[0]}")
+                        print(f"-Charge: £{prices[1][Athletes.index(instance)]}/Month")
+                    print(f"\nTotal: £{prices[0]}/Month")
+                    input("Press Enter to go back to menu...")
                 
                 #delete athlete
                 case "3":
-                    #lists 
+                    #lists all athletes for user to see
                     for instance in Athletes:
                         print(f"\nAthlete {Athletes.index(instance)+1}:")
                         instance.print_info()
