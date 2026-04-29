@@ -1,6 +1,4 @@
-##imports
-import os
-##
+
 
 
 ###Global variable###
