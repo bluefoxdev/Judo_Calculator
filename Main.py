@@ -334,5 +334,4 @@ def main():
             print('Answer not Numeric (eg: "1")')
 
 #calls the "main" function starting the program flow
-athletes.append(Person("na", 33, 34, 34))
 main()
