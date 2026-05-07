@@ -63,7 +63,7 @@ class Athlete(Person):
         else:
             #user fills out
             print("#####Adding new Athlete#####\n")
-            self.name = input("Enter name:")
+            self.name = ""
             self.age = 0
             self.weight = 0
             self.sex = ""
@@ -71,16 +71,30 @@ class Athlete(Person):
             self.gym_plan = ""
             self.competitions = ""
             self.coaching_hours = ""
+
+            while(self.name == ""):
+                attempt = input('Please enter name, needs to be more than 2 and less than 20 letters:')
+
+                attempt = attempt.strip()
+
+                length = len(attempt)
+                
+                #if name is more than 2 and less then 20 character accept it, if not, prompt again
+                if length > 2 and length < 20:
+                    self.name = attempt
+                else:
+                    print("Invalid name, needs to be more than 2 and less than 20 letters")
+
             #loops until a valid age other than zero entered by user
             while(self.age == 0):
                 #ageinput
-                Attempt = input('Enter age(eg "34"):')
+                attempt = input('Enter age(eg "34"):')
                 #remove all whitespaces from back and front of input
-                Attempt = Attempt.strip()
+                attempt = attempt.strip()
 
                 #validates to see if input can be converted to an integer
                 try:
-                    self.age = int(Attempt)
+                    self.age = int(attempt)
                     #if age is just a number and is above 0, it is valid, else prompt user to try again
                     if self.age > 0:
                         break
@@ -93,13 +107,13 @@ class Athlete(Person):
             #loops till valid weight is given by user
             while(self.weight == 0):
                 #input
-                Attempt = input('Enter weight in kgs (eg "34.5"):')
+                attempt = input('Enter weight in kgs (eg "34.5"):')
                 #remove all whitespaces from back and front of input
-                Attempt = Attempt.strip()
+                attempt = attempt.strip()
 
                 #validates to see if input can be converted to an integer
                 try:
-                    self.weight = float(Attempt)
+                    self.weight = float(attempt)
                     #if weight is just a number and is above 0, it is valid, else prompt user to try again
                     if self.weight > 0:
                         break
@@ -112,41 +126,41 @@ class Athlete(Person):
             #loops till valid sex is given by user
             while(self.sex == ""):
                 #user input and input formatting
-                Attempt = input('Enter sex(eg "M" or "F"):')
-                Attempt = Attempt.strip().upper()
+                attempt = input('Enter sex(eg "M" or "F"):')
+                attempt = attempt.strip().upper()
                 #checks if the input is M or F, if not warn user and allow it to be reentered
-                if Attempt in ["M", "F"]:
-                    self.sex = Attempt
+                if attempt in ["M", "F"]:
+                    self.sex = attempt
                 else:
                     print("Invalid sex entered, for the Safety of other athletes either M or F needs to be specified for proper weight classification, please enter M or F")
 
             #loops till valid gym plan is given by user
             while(self.gym_plan == ""):
                 #user input and input formatting
-                Attempt = input('Enter desired plan number\n1:Beginner\n2:Intermediate\n3:Advance\n4:Professional\n')
-                Attempt = Attempt.strip()
+                attempt = input('Enter desired plan number\n1:Beginner\n2:Intermediate\n3:Advance\n4:Professional\n')
+                attempt = attempt.strip()
                 #checks if the input is a valid number, if not warn user and allow it to be reentered
-                if Attempt in ["1", "2", "3", "4"]:
-                    self.gym_plan = Attempt
+                if attempt in ["1", "2", "3", "4"]:
+                    self.gym_plan = attempt
                 else:
                     print("Invalid, please enter a number of the desired plan on the list.")
             #loops till valid amount of competitions are given by user
             while(self.competitions == ""):
-                Attempt = input('Enter desired amount of competitions from 0 to 2:')
-                Attempt = Attempt.strip()
+                attempt = input('Enter desired amount of competitions from 0 to 2:')
+                attempt = attempt.strip()
                 #checks if the input is a valid number, if not warn user and allow it to be reentered
-                if Attempt in ["0", "1", "2"]:
-                    self.competitions = Attempt
+                if attempt in ["0", "1", "2"]:
+                    self.competitions = attempt
                 else:
                     print("Invalid number of competitions.")
 
             #loops till valid amount of private tutoring hours is given by user
             while(self.coaching_hours == ""):
-                Attempt = input('Enter desired amount of private coaching hours from 0 to 3\n')
-                Attempt = Attempt.strip()
+                attempt = input('Enter desired amount of private coaching hours from 0 to 3\n')
+                attempt = attempt.strip()
                 #checks if the input is a valid number, if not warn user and allow it to be reentered
-                if Attempt in ["0", "1", "2", "3"]:
-                    self.coaching_hours = Attempt
+                if attempt in ["0", "1", "2", "3"]:
+                    self.coaching_hours = attempt
                 else:
                     print("Invalid number of hours selected .")
 
@@ -214,7 +228,11 @@ def calculate_cost(athletes):
     #loop through athletes and assign cost based on chosen plan
     for instance in athletes:
         plan_price = 0
-        
+
+        #skip if not a Athlete class
+        if type(instance).__name__ != "Athlete":
+            continue
+
         #error catching tests to see if the gym plan number is recognised
         if instance.gym_plan in ["1", "2", "3", "4"]:
             plan_price = plans[instance.get_plan()]
@@ -261,9 +279,15 @@ def main():
                     #gets the cost for all athletes individually and all together 
                     prices = calculate_cost(athletes)
                     for instance in athletes:
+                        #skip if not a Athlete class
+                        if type(instance).__name__ != "Athlete":
+                            continue
                         print(f"\nAthlete {athletes.index(instance)+1}:")
+                        #display info
                         instance.print_info()
+                        #display cost for athelete
                         print(f"-Charge: £{prices[1][athletes.index(instance)]}/Month")
+                    #display total for all athletes
                     print(f"\nTotal: £{prices[0]}/Month")
                     input("Press Enter to go back to menu...")
                 
@@ -271,21 +295,27 @@ def main():
                 case "3":
                     #lists all athletes for user to see
                     for instance in athletes:
+                        #skip if not a Athlete class
+                        if type(instance).__name__ != "Athlete":
+                            continue
                         print(f"\nAthlete {athletes.index(instance)+1}:")
                         instance.print_info()
+
                     #prompts user for choice and removes whitespace from sides
-                    delete_Attempt = input("Enter the number of the Athlete you want to delete:")
-                    delete_Attempt = delete_Attempt.strip()
+                    delete_attempt = input("Enter the number of the Athlete you want to delete or enter 0 to cancel:")
+                    delete_attempt = delete_attempt.strip()
 
                     #try and convert user input to int for reading
                     try:
                         #int conversion
-                        delete_Attempt = int(delete_Attempt[0])
+                        delete_attempt = int(delete_attempt[0])
                         #check if input is above zero and less or equal to number of athletes
-                        if delete_Attempt > 0 and delete_Attempt <= len(athletes):
+                        if delete_attempt > 0 and delete_attempt <= len(athletes):
                            #deletes athletes
-                            del athletes[delete_Attempt-1]
+                            del athletes[delete_attempt-1]
                             print("Athlete deleted successfully")
+                        elif delete_attempt == 0:
+                            continue
                         #warn if number is invalid
                         else:
                             print("Invalid choice, number out of range (must be in range of number of athletes)")
@@ -304,4 +334,5 @@ def main():
             print('Answer not Numeric (eg: "1")')
 
 #calls the "main" function starting the program flow
+athletes.append(Person("na", 33, 34, 34))
 main()
