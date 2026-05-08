@@ -172,7 +172,7 @@ class Athlete(Person):
         elif self.sex == "M" and self.weight < 90:
             self.weight_category = "Male medium weight"
         
-        elif self.sex == "M" and self.weight > 90:
+        elif self.sex == "M" and self.weight >= 90:
             self.weight_category = "Male heavy weight"
         #Females
         elif self.sex == "F" and self.weight < 57:
@@ -181,7 +181,7 @@ class Athlete(Person):
         elif self.sex == "F" and self.weight < 70:
             self.weight_category = "Female medium weight"
         
-        elif self.sex == "F" and self.weight > 70:
+        elif self.sex == "F" and self.weight >= 70:
             self.weight_category = "Female heavy weight"
         else:
             #this is impossible, but for whatever reason it does happen, it will be caught here
