@@ -307,8 +307,9 @@ def main():
 
                     #try and convert user input to int for reading
                     try:
-                        #int conversion
-                        delete_attempt = int(delete_attempt[0])
+                        #int conversion 
+                        delete_attempt = int(delete_attempt)
+
                         #check if input is above zero and less or equal to number of athletes
                         if delete_attempt > 0 and delete_attempt <= len(athletes):
                            #deletes athletes
@@ -320,7 +321,7 @@ def main():
                         else:
                             print("Invalid choice, number out of range (must be in range of number of athletes)")
                     #if it cannot be turned into an int warn user
-                    except TypeError:
+                    except Exception as e:
                         print('Answer not Numeric (eg: "3")')
                 #quit the program
                 case "4":
