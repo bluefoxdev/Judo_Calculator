@@ -18,3 +18,9 @@ When the project began the program was given the following requirements to follo
 ### Usage
 
 free to use and learn from for anything without credit.
+
+### end of project write off
+
+I am aware there are issues with this project as this has already been submitted I will probably not fix them, however I will list them here.
+
+* some int converters are still flawed and can cause errors when given blank input
